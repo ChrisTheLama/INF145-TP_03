@@ -1,0 +1,12 @@
+﻿  main.c
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\m_reconstruction.h(58): warning C4010: single-line comment contains line-continuation character
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(185): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(201): warning C4047: 'function': 't_regroupement *' differs in levels of indirection from 't_regroupement (*)[20]'
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(201): warning C4024: 'get_pos': different types for formal and actual parameter 2
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(211): warning C4010: single-line comment contains line-continuation character
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(239): warning C4020: 'free_rec_tab': too many actual parameters
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(304): warning C4010: single-line comment contains line-continuation character
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(360): warning C4018: '<': signed/unsigned mismatch
+c:\users\an532\documents\éts\_2018_hiver\inf145\__travail_pratique-02\__travail_pratique-02\main.c(361): warning C4010: single-line comment contains line-continuation character
+  __TRAVAIL_PRATIQUE-02.vcxproj -> C:\Users\an532\Documents\ÉTS\_2018_Hiver\INF145\__TRAVAIL_PRATIQUE-02\Debug\__TRAVAIL_PRATIQUE-02.exe
+  __TRAVAIL_PRATIQUE-02.vcxproj -> C:\Users\an532\Documents\ÉTS\_2018_Hiver\INF145\__TRAVAIL_PRATIQUE-02\Debug\__TRAVAIL_PRATIQUE-02.pdb (Partial PDB)
