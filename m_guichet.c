@@ -29,13 +29,19 @@ Description : recoit la taille de la file d'attente. Elle
 construit le tableau dynamique necessaire pour la file et en cas de succes de l'allocation va fixer
 la taille, le debut, la fint et le nombre d'elements (en cas d'echec de l'allocation, tous
 les membres du t_file_block et du t_guichet seront nuls (0 ou NULL). Elle retourne le nouvel objet.
-PARAMETRES : la taille du t_regroupement / pile
+PARAMETRES : la taille de la file
 RETOUR : Un t_guichet ayant les informations en entree
 SPECIFICATIONS : la taille doit etre positif
 */
 /*************************************************************************************************/
 t_guichet init_guichet(int taille_file) {
+	t_guichet guich = { 0 };
 
+	if (taille_file > 0) {
+		guich.file = init_file_block(taille_file).tab_block;
+		guich.matrice_temps = init_mat_temps();
+	}
+	return guich;
 }
 
 /************************************** get_nb_bloc_guichet **************************************/
@@ -48,7 +54,8 @@ SPECIFICATIONS : Le guichet doit être initialise
 */
 /*************************************************************************************************/
 int get_nb_bloc_guichet(t_guichet* guich) {
-
+	return (guich->bloc_traite.taille_bloc == 0) ? guich->file->nb_block :
+		guich->file->nb_block + 1;
 }
 
 /*************************************** RECEPTION_BLOCK *****************************************/
@@ -61,7 +68,7 @@ SPECIFICATIONS : La file doit être initialisee
 */
 /*************************************************************************************************/
 int reception_block(t_guichet* guich, t_block bloc) {
-
+	return enfiler_block(guich->file, bloc); //La verification de la taille est dans la fonction
 }
 
 /************************************* DONNER_BLOCK_TERMINE **************************************/
@@ -82,7 +89,23 @@ SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 /*************************************************************************************************/
 t_block donner_block_termine(t_guichet * guich) {
+	t_block bloc_tempo = { 0 }, bloc_vide = { 0 };
 
+	if (guich->compte_rebours > 0) {
+		guich->compte_rebours--;
+		return bloc_vide;
+	}
+	else {
+		bloc_tempo = guich->bloc_traite;
+		if (defiler_block(guich->file, &(guich->bloc_traite))) {
+			guich->compte_rebours = determiner_temps(guich);
+			return bloc_tempo;
+		}
+		else {
+			guich->compte_rebours = 0;
+			return bloc_vide;
+		}
+	}
 }
 
 /***************************************** FREE_GUICHET ******************************************/
@@ -94,7 +117,8 @@ SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 /*************************************************************************************************/
 int free_guichet(t_guichet * guich) {
-
+	free_file_block(guich->file);
+	free_mat(guich);
 }
 
 /*===============================================================================================*/
@@ -164,4 +188,25 @@ static int determiner_temps(t_guichet * guich){
 
 		return somme;
 	}
+}
+
+/***************************************** FREE_MAT ******************************************/
+/* MUTATRICE
+Description : Libere les tableaux dynamique de la matrice dynamique
+PARAMETRES : l'adresse du t_guichet
+RETOUR : "1" si les liberations se sont faits et "0" sinon
+SPECIFICATIONS : La file et le guichet doivent être initialises
+*/
+/*************************************************************************************************/
+void free_mat(t_guichet* guich);
+void free_mat(t_guichet* guich) {
+	int i = 0, j = 0;
+
+	for (i = 0; i < TAILLE; i++) {
+		free(guich->matrice_temps[i]); guich->matrice_temps[i] = NULL;
+	}
+	
+	free(guich->matrice_temps); guich->matrice_temps = NULL;
+
+	return;
 }
