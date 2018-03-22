@@ -42,20 +42,18 @@ static int **init_mat_temps(void) {
 
 	srand((int)time(NULL)); //initialisation de la fonction rand()
 
-	ptr_mat = (int**)calloc(TAILLE, sizeof(int*)); //tableau de pointeur de taille TAILLE
-	if (ptr_mat == NULL)
-		return NULL;
+	ptr_mat = (int**)malloc(TAILLE * sizeof(int*)); //tableau de pointeur de taille TAILLE
+	if (ptr_mat == NULL) return NULL;
 
 	for (i = 0; i < TAILLE; i++) {
-		ptr_mat[i] = (int*)calloc(TAILLE, sizeof(int));
-		if (ptr_mat[i] == NULL)
-			return NULL;
+		ptr_mat[i] = (int*)malloc(TAILLE * sizeof(int));
+		if (ptr_mat[i] == NULL) return NULL;
 	}
 
 	//Remplissage de la matrice
 	for (i = 0; i < TAILLE; i++) {
 		for (j = 0; j < TAILLE; j++) {
-			ptr_mat[i][j] = (MINV + rand()) % MAXV;
+			ptr_mat[i][j] = (int)(MINV + rand()) % MAXV;
 		}
 	}
 
@@ -79,8 +77,8 @@ static int determiner_temps(t_guichet * guich) {
 		int somme = 0, ligne = 0, col_arr = 0;
 		int i = 0;
 
-		ligne = (int)(guich->bloc_traite.f_identifiant) % TAILLE;
-		col_arr = (int)((guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE;
+		ligne = (unsigned int)(guich->bloc_traite.f_identifiant) % TAILLE;
+		col_arr = (unsigned int) (((float)(guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE);
 
 		for (i = 0; i < col_arr; i++) {
 			somme += (guich->matrice_temps)[ligne][i];
@@ -188,6 +186,8 @@ t_block donner_block_termine(t_guichet * guich) {
 	}
 	else {
 		bloc_tempo = guich->bloc_traite;
+		//defiler_block(&(guich->file), &(guich->bloc_traite)); 
+
 		if (defiler_block(&(guich->file), &(guich->bloc_traite))) {
 			guich->compte_rebours = determiner_temps(guich);
 			return bloc_tempo;
