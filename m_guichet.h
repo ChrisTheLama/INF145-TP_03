@@ -41,7 +41,7 @@ free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
 /*************************************************************************************************/
 typedef struct {
 
-	t_file_block* file; //pointeur d'une file d'attente
+	t_file_block file; //pointeur d'une file d'attente
 	t_block bloc_traite; //bloc en traitement
 	int compte_rebours; //compte a rebours avant l'envoit du bloc
 	int ** matrice_temps; //pointeur vers une matrice dynamique
