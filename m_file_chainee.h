@@ -36,24 +36,29 @@ traitement d'une file chainée de t_block.
 
 /*==========================================================*/
 // type qui défini un noeud dans la liste chainée de block
-typedef struct {
 
-	t_block *data;				//pointeur du block
+typedef struct noeud_block t_noeud;
+
+typedef t_noeud* t_lien_block;
+
+struct noeud_block{
+
+	t_block data;					//pointeur du block
 		
-	t_block *precedent;			//pointeur du bloc précédent
+	t_lien_block precedent;			//pointeur du bloc précédent
 
-	t_block *suivant;			//pointeur du bloc suivant
+	t_lien_block suivant;			//pointeur du bloc suivant
 
-}t_noeud_block;
+};
 
 
 // le type t_file_block_chainee est publique,
 // il donne les propriétés d'un élément d'une file de block
 typedef struct {
 
-	t_noeud_block *tete;						//position du début de la file
+	t_lien_block tete;				//position du début de la file
 
-	t_noeud_block *queue;						//position de la fin de la file
+	t_lien_block queue;				//position de la fin de la file
 
 	int nb_block;					//nombre d'élément dans la file
 
@@ -76,7 +81,7 @@ SORTIE: 1/0 réussite/échec
 SPECS: si la file est pleine, la fonction retourne 0 et le
 block n'est pas enfiler
 */
-int enfiler_block_chainee(t_file_block_chainee* file, t_block block);
+void enfiler_block_chainee(t_file_block_chainee* file, t_block block);
 /*==========================================================*/
 
 
@@ -86,14 +91,12 @@ int enfiler_block_chainee(t_file_block_chainee* file, t_block block);
 défile un block dans la file chainée de block
 
 PARAMETRE(s):	-la file
-				-le block dépilé
 
-SORTIE: 1/0 réussite/échec
+SORTIE: un bloc
 
-SPECS: si la file est vide, la fonction retourne 0 et le
-block n'est pas défiler
+SPECS: 
 */
-int defiler_block_chainee(t_file_block_chainee *file, t_block *block);
+t_block defiler_block_chainee(t_file_block_chainee *file);
 /*==========================================================*/
 
 #endif
