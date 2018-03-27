@@ -1,44 +1,51 @@
-/*----------------------------------------------------*/
-/*  	par Christopher Lamarche et Guillaume Forget  */
-/*----------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------*/
+/*  	                     par Christopher Lamarche et Guillaume Forget                        */
+/*-----------------------------------------------------------------------------------------------*/
 /*
-
-*//*==========================================================*/
+Ce module inclus les fonctions pour la gestion des files chainée de t_block dans le module de 
+regroupement des guichets. Oermet de stocker les blocks qui sortent des guichets
+*//*=============================================================================================*/
 #include "m_file_chainee.h"
 
+/*===============================================================================================*/
+/*                                     CONSTANTES PRIVÉES                                        */
+/*===============================================================================================*/
 
 
+/*===============================================================================================*/
+/*                                     FONCTIONS PRIVÉES                                         */
+/*===============================================================================================*/
+
+/*************************************************************************************************/
+//  initialiser un noeud
+/*************************************************************************************************/
+static t_lien_block init_noeud(t_block bloc);
+
+static t_lien_block init_noeud(t_block bloc) {
+
+	//déclaration d'un noeud
+	t_lien_block noeud_temp = { 0 };
+
+	//allocation de l'espace mémoire du noeud
+	noeud_temp = (t_lien_block)calloc(1, sizeof(struct noeud_block));
+
+	if (noeud_temp != NULL) {
+
+		//copie le bloc dans le noeud
+		noeud_temp->data = bloc;
+	}
+
+	return noeud_temp;
+}
 
 
-/*==========================================================*/
-//CONSTANTES PRIVÉES
+/*===============================================================================================*/
+/*                                    FONCTIONS PUBLIQUES                                        */
+/*===============================================================================================*/
 
-
-
-
-
-/*==========================================================*/
-
-
-
-/*==========================================================*/
-//  fonctions privées factorisant le procédé de découpage
-
-
-
-
-
-
-
-/*==========================================================*/
-
-
-/*==========================================================*/
-// LES DÉFINITIONS DES FONCTIONS D'INTERFACE
-
-/*==========================================================*/
+/*************************************************************************************************/
 //  initialiser la file chainée de block
-/*==========================================================*/
+/*************************************************************************************************/
 t_file_block_chainee init_file_block_chainee() {
 
 	//déclaration d'une file
@@ -48,40 +55,22 @@ t_file_block_chainee init_file_block_chainee() {
 	return file;
 }
 
-
-/*===============================================================================================*/
-/*                                 CONSTRUCTEUR PRIVÉE                                           */
-/*===============================================================================================*/
-/*==========================================================*/
-//  initialiser un noeud
-/*==========================================================*/
-static t_lien_block init_noeud(t_block bloc) {
-
-	//déclaration d'un noeud
-	t_lien_block noeud_temp = { 0 };
-
-	//allocation de son espace mémoire
-	noeud_temp = (t_lien_block) calloc(1, sizeof(struct noeud_block));
-
-	if (noeud_temp != NULL) {
-		noeud_temp->data = bloc;
-	}
-
-	return noeud_temp;
-}
-/*===============================================================================================*/
-
-/*==========================================================*/
+/*************************************************************************************************/
 //  enfiler un block
-/*==========================================================*/
-void enfiler_block_chainee(t_file_block_chainee* file, t_block block) {
+/*************************************************************************************************/
+int enfiler_block_chainee(t_file_block_chainee* file, t_block bloc) {
 
 	//déclaration d'un noeud temporaire
 	t_lien_block noeud_temp;
 
 
 	//créer un nouveau noeud
-	noeud_temp = init_noeud(block);
+	noeud_temp = init_noeud(bloc);
+
+	//si la création du noeud est un échec
+	if (noeud_temp == NULL){
+		return 0;
+	}
 
 	//si la file est vide
 	if (file->nb_block < 1){
@@ -105,28 +94,27 @@ void enfiler_block_chainee(t_file_block_chainee* file, t_block block) {
 	//ajouter au nombre de bloc
 	file->nb_block++;
 
-	return;
+	return 1;
 	
 }
 
-/*==========================================================*/
+/*************************************************************************************************/
 //  défiler un block
-/*==========================================================*/
-t_block defiler_block_chainee(t_file_block_chainee* file) {
+/*************************************************************************************************/
+int defiler_block_chainee(t_file_block_chainee* file, t_block* bloc) {
 
 	t_lien_block tete_temp = { 0 };
-	t_block bloc = { 0 };
 
 	//si la file est vide
 	if (file->nb_block < 1){
-		return bloc;
+		return 0;
 	}
 
 	//si la file a un élément
 	if (file->nb_block == 1){
 
 		//défiler un block
-		bloc = file->tete->data;
+		*bloc = file->tete->data;
 
 		//libère la tête
 		free(file->tete);
@@ -136,7 +124,7 @@ t_block defiler_block_chainee(t_file_block_chainee* file) {
 	if (file->nb_block > 1) {
 
 		//défiler un block
-		bloc = file->tete->data;
+		*bloc = file->tete->data;
 
 		//changer la tête
 		tete_temp = file->tete->suivant;
@@ -154,13 +142,11 @@ t_block defiler_block_chainee(t_file_block_chainee* file) {
 	file->nb_block--;
 
 	//retourne un bloc
-	return bloc;		
+	return 1;		
 	
 }
-
-
-/*==========================================================*/
-/*==========================================================*/
+/*************************************************************************************************/
+/*===============================================================================================*/
 
 
 
