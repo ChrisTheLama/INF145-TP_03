@@ -38,16 +38,15 @@ free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
 
 /*************************************************************************************************/
 /*************************************************************************************************/
-typedef t_guichet	t_element;
-typedef t_liste_g*	t_ptr;
+typedef struct liste_g t_liste_g;
 
-typedef struct {
+struct liste_g{
 
-	t_element data;
-	t_ptr g_avant;
-	t_ptr g_apres;
+	t_guichet data;
+	t_liste_g * g_avant;
+	t_liste_g * g_apres;
 
-} t_liste_g;
+};
 
 
 /***************************************** NOM FONCTION ******************************************/
@@ -69,7 +68,7 @@ PARAMETRES : RIEN
 RETOUR : Un t_guichet ayant les informations en entree
 SPECIFICATIONS : la taille doit etre positif
 */
-t_liste_g* init_liste_g(t_guichet data); 
+t_liste_g* init_liste_g(int taille); 
 /*************************************************************************************************/
 
 /**************************************** GET_NB_GUICHET *****************************************/
@@ -80,7 +79,7 @@ PARAMETRES : l'adresse du guichet evalue
 RETOUR : le nombre de t_block dans le guichet
 SPECIFICATIONS : Le guichet doit être initialise
 */
-int get_nb_guichet(t_liste_g* l_guich_tete);
+int get_nb_lguichet(t_liste_g* l_guich_tete);
 /**************************************************************************************************/
 
 /**************************************** CHERCHER_G_FIN ******************************************/
@@ -90,7 +89,7 @@ PARAMETRES : L'adresse de la tête de la liste
 RETOUR : Renvoit un "1" si l'insertion a reussit & "0" sinon.
 SPECIFICATIONS : La file doit être initialisee
 */
-t_ptr chercher_g_fin(t_liste_g* l_guich);
+t_liste_g * chercher_g_fin(t_liste_g* l_guich);
 /*************************************************************************************************/
 
 /**************************************** CHERCHER_G_DEBUT ***************************************/
@@ -100,7 +99,7 @@ PARAMETRES : L'adresse de la tête de la liste
 RETOUR : Renvoit un "1" si l'insertion a reussit & "0" sinon.
 SPECIFICATIONS : La file doit être initialisee
 */
-t_ptr chercher_g_debut(t_liste_g* l_guich);
+t_liste_g * chercher_g_debut(t_liste_g* l_guich);
 /*************************************************************************************************/
 
 /*************************************** AJOUTER_G_FIN *******************************************/
@@ -110,7 +109,7 @@ PARAMETRES : l_guich  (NULL si nouvelle liste)
 RETOUR : Renvoit un "1" si l'ajout a reussit & "0" sinon.
 SPECIFICATIONS : La file doit être initialisee
 */
-int ajouter_g_fin(t_liste_g* l_guich, t_guichet guich);
+int ajouter_g_fin(t_liste_g* l_guich, int taille);
 /*************************************************************************************************/
 
 /**************************************** ENLEVER_G_DEBUT ****************************************/
@@ -129,7 +128,7 @@ RETOUR : Retourne un t_block : vide si le compteur (compte_rebours) n'est pas a 
 celui en traitement si le compteur est à zero
 SPECIFICATIONS : La file et le guichet doivent être initialises
 */
-t_block enlever_g_debut(t_guichet * guich);
+t_liste_g * enlever_g_debut(t_liste_g* l_guich);
 /*************************************************************************************************/
 
 /***************************************** FREE_GUICHET ******************************************/
@@ -142,6 +141,16 @@ SPECIFICATIONS : La file et le guichet doivent être initialises
 int free_liste_g(t_liste_g * l_guich);
 /*************************************************************************************************/
 
+/************************************** CHERCHER_DATA_G ******************************************/
+/* MUTATRICE
+Description :
+PARAMETRES : l'adresse du t_liste_g
+RETOUR : Le guichet dans la liste t_liste_g
+SPECIFICATIONS : La file et le guichet doivent être initialises
+*/
+t_guichet chercher_data_g(t_liste_g * l_guich);
+/*************************************************************************************************/
+
 /**************************************** CHERCHER_G_VIDE ****************************************/
 /* INFORMATRICE
 Description : Donne l'adresse du dernier noeud de la chaine
@@ -149,6 +158,17 @@ PARAMETRES : L'adresse de la tête de la liste
 RETOUR : Renvoit l'adresse du premier noeud avec de l'espace dans le guichet 
 SPECIFICATIONS : La file doit être initialisee
 */
-t_ptr chercher_g_vide(t_liste_g* l_guich);
+t_liste_g * chercher_g_vide(t_liste_g* l_guich);
 /*************************************************************************************************/
+
+/**************************************** GET_BLOC_LGUICHET **************************************/
+/* INFORMATRICE
+Description : Retourne le nombre total de t_block non-vides dans sa liste de guichet
+PARAMETRES : L'adresse de la tête de la liste
+RETOUR : Renvoit le nombre de t_bloc non-vide
+SPECIFICATIONS : La file doit être initialisee
+*/
+int get_bloc_lguichet(t_liste_g* l_guich);
+/*************************************************************************************************/
+
 #endif
