@@ -41,10 +41,10 @@ free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
 /*************************************************************************************************/
 typedef struct {
 
-	t_file_block file; //pointeur d'une file d'attente
+	t_file_block file; //une file d'attente
 	t_block bloc_traite; //bloc en traitement
 	int compte_rebours; //compte a rebours avant l'envoit du bloc
-	int ** matrice_temps; //pointeur vers une matrice dynamique
+	int **matrice_temps; //pointeur vers une matrice dynamique
 
 } t_guichet;
 
@@ -64,7 +64,7 @@ Description : recoit la taille de la file d'attente. Elle
 construit le tableau dynamique necessaire pour la file et en cas de succes de l'allocation va fixer
 la taille, le debut, la fint et le nombre d'elements (en cas d'echec de l'allocation, tous
 les membres du t_file_block et du t_guichet seront nuls (0 ou NULL). Elle retourne le nouvel objet.
-PARAMETRES : la taille du t_regroupement / pile
+PARAMETRES : la taille de la file
 RETOUR : Un t_guichet ayant les informations en entree
 SPECIFICATIONS : la taille doit etre positif
 */
@@ -81,7 +81,6 @@ SPECIFICATIONS : Le guichet doit être initialise
 */
 int get_nb_bloc_guichet(t_guichet* guich);
 /*************************************************************************************************/
-
 
 /*************************************** RECEPTION_BLOCK *****************************************/
 /* MUTATRICE
@@ -121,6 +120,16 @@ RETOUR : "1" si les liberations se sont faits et "0" sinon
 SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 int free_guichet(t_guichet * guich);
+/*************************************************************************************************/
+
+/*************************************** guichet_case_vide ***************************************/
+/* INFORMATRICE
+Description : Informe si le guichet a un espace vide
+PARAMETRES : l'adresse du guichet evalue
+RETOUR : retourne '1' si il y a de l'espace dans le guichet, '0' sinon
+SPECIFICATIONS : Le guichet doit être initialise
+*/
+int guichet_case_vide(t_guichet* guich);
 /*************************************************************************************************/
 
 #endif
