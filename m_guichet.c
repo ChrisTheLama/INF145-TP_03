@@ -37,23 +37,23 @@ static int **init_mat_temps(void);
 
 static int **init_mat_temps(void) {
 
-	int ** ptr_mat = NULL; //initialisation du pointeur
+	int **ptr_mat = NULL; //initialisation du pointeur
 	int i = 0, j = 0; //Compteur pour les boucles
 
 	srand((int)time(NULL)); //initialisation de la fonction rand()
 
 	ptr_mat = (int**)malloc(TAILLE * sizeof(int*)); //tableau de pointeur de taille TAILLE
-	if (ptr_mat == NULL) return NULL;
+	if (ptr_mat == NULL) printf("ERREUR POINTEUR POINTEUR DU TAB DYNAMIQUE");
 
 	for (i = 0; i < TAILLE; i++) {
 		ptr_mat[i] = (int*)malloc(TAILLE * sizeof(int));
-		if (ptr_mat[i] == NULL) return NULL;
+		if (ptr_mat[i] == NULL) printf("ERREUR POINTEUR %d DU TAB DYNAMIQUE",i);
 	}
 
 	//Remplissage de la matrice
 	for (i = 0; i < TAILLE; i++) {
 		for (j = 0; j < TAILLE; j++) {
-			ptr_mat[i][j] = (int)(MINV + rand()) % MAXV;
+			ptr_mat[i][j] = (int) (MINV + (rand() % (MAXV-MINV)));
 		}
 	}
 
@@ -77,13 +77,13 @@ static int determiner_temps(t_guichet * guich) {
 		int somme = 0, ligne = 0, col_arr = 0;
 		int i = 0;
 
-		ligne = (unsigned int)(guich->bloc_traite.f_identifiant) % TAILLE;
-		col_arr = (unsigned int) (((float)(guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE);
+		ligne = (int)((guich->bloc_traite.f_identifiant) % TAILLE);
+		col_arr = (int) (((float)(guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE);
 
-		for (i = 0; i < col_arr; i++) {
+		for (i = 0; i <= col_arr; i++) {
 			somme += (guich->matrice_temps)[ligne][i];
 		}
-
+		
 		return somme;
 	}
 }
@@ -101,7 +101,8 @@ static int free_mat(t_guichet* guich) {
 	int compteur = 0;
 
 	for (compteur = 0; compteur < TAILLE; compteur++) {
-		free(guich->matrice_temps[compteur]); guich->matrice_temps[compteur] = NULL;
+		free(guich->matrice_temps[compteur]);
+		guich->matrice_temps[compteur] = NULL;
 	}
 
 	free(guich->matrice_temps); guich->matrice_temps = NULL;
@@ -208,7 +209,28 @@ SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 /*************************************************************************************************/
 int free_guichet(t_guichet * guich) {
-	free_file_block(&(guich->file));
+	
 	free_mat(guich);
+	free_file_block(&(guich->file));
+	 
 	return 1;
 }
+
+/*************************************** GUICHET_CASE_VIDE ***************************************/
+/* INFORMATRICE
+Description : Informe si le guichet a un espace vide
+PARAMETRES : l'adresse du guichet evalue
+RETOUR : retourne '1' si il y a de l'espace dans le guichet, '0' sinon
+SPECIFICATIONS : Le guichet doit être initialise
+*/
+int guichet_case_vide(t_guichet* guich) {
+	int i = 0;
+	while (guich->file.tab_block[i].taille_bloc != 0 && i < guich->file.taille) {
+		i++;
+	}
+	if (i>= guich->file.taille){
+		return 0;
+	}
+	else { return 1; }
+}
+/*************************************************************************************************/
