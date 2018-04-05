@@ -65,19 +65,19 @@ void print_guichet(t_liste_g* guich);
 /*===============================================================================================*/
 
 /*===============================================================================================*/
-/*le main pour traiter plusieurs fichiers en même temps*/
+/*le main mandat 2-2B pour traiter plusieurs fichiers en même temps*/
 /*===============================================================================================*/
 #if(1)
 int main(void) {
 
-	int i = 0, temps = 0;							//compteur boucle
+	int i = 0, temps = 0;						// compteur boucle
 	int position = 0;							// position du regroupement/reconstruction du bloc
-	t_block block;								// accueille chaque bloc des fichiers
-	t_block block_recu;							// bloc recu du traiteur
+	t_block block = { 0 };						// accueille chaque bloc des fichiers
+	t_block block_recu = { 0 };					// bloc recu du traiteur
 	unsigned int id_fichier[NB_FICHIERS];		// tableau d'id fichier
 	t_regroupement reg[NB_FICHIERS];			// tableau de regroupement (pile)
 	t_reconstruction rec[NB_FICHIERS];			// tableau de reconstruction des fichiers
-	char copie_nom_fich[NB_FICHIERS][NOM_MAX];	//tableau de nom des nouveaux fichiers
+	char copie_nom_fich[NB_FICHIERS][NOM_MAX];	// tableau de nom des nouveaux fichiers
 	t_traiteur traiteur;
 
 	//init traiteur
