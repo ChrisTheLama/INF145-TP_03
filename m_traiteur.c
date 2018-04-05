@@ -49,7 +49,7 @@ t_traiteur init_traiteur(int taille) {
 Description : Retourne le nombre de guichets actuellement dans la liste du traiteur
 PARAMETRES : l'adresse du traiteur evalue
 RETOUR : le nombre de guichet dans le traiteur
-SPECIFICATIONS : Le traiteur doit Ãªtre initialise
+SPECIFICATIONS : Le traiteur doit être initialise
 */
 int get_nb_guichet(t_traiteur * traiteur) {
 	return get_nb_lguichet(traiteur->liste_guichet);
@@ -58,17 +58,17 @@ int get_nb_guichet(t_traiteur * traiteur) {
 
 /************************************ GET_NB_BLOC_TRAITEUR ****************************************/
 /* INFORMATRICE
-Description : Retourne le nombre total de t_block non-vides dans ses guichets plus ceux prÃ©sents
+Description : Retourne le nombre total de t_block non-vides dans ses guichets plus ceux présents
 dans sa file de
 PARAMETRES : L'adresse du t_traiteur
 RETOUR : le nombre de t_bloc non-vides
-SPECIFICATIONS : La file doit Ãªtre initialisee
+SPECIFICATIONS : La file doit être initialisee
 */
 int get_nb_bloc_traiteur(t_traiteur * traiteur) {
 	int nb_bloc = 0;
 
 	nb_bloc += get_bloc_lguichet(traiteur->liste_guichet);
-	nb_bloc += get_nb_fileg(traiteur->liste_guichet);
+	nb_bloc += get_nb_fileg(&(traiteur->file_garde));
 
 	return nb_bloc;
 }
@@ -77,13 +77,13 @@ int get_nb_bloc_traiteur(t_traiteur * traiteur) {
 /****************************************** ENTREE_BLOC ******************************************/
 /* MUTATRICE
 Description : Cette fonction va :
-Â· dÃ©clencher donner_block_termine pour chacun des guichets du traiteur pour mettre dans
-sa file de garde tous les blocs non-vides traitÃ©s qui ont Ã©tÃ© obtenus.
-Â· si le bloc reÃ§u en paramÃ¨tre est non-vide,
-o sÃ©lectionner un guichet qui acceptera dâ€™enfiler le bloc (vous avez la responsabilitÃ© de la
-stratÃ©gie de choix).
-o si la prÃ©cÃ©dente est impossible Ã  rÃ©aliser et toutes les files sont pleines, crÃ©er et ajouter
-un guichet Ã  la liste du traiteur et mettez-y le bloc.
+· déclencher donner_block_termine pour chacun des guichets du traiteur pour mettre dans
+sa file de garde tous les blocs non-vides traités qui ont été obtenus.
+· si le bloc reçu en paramètre est non-vide,
+o sélectionner un guichet qui acceptera d’enfiler le bloc (vous avez la responsabilité de la
+stratégie de choix).
+o si la précédente est impossible à réaliser et toutes les files sont pleines, créer et ajouter
+un guichet à la liste du traiteur et mettez-y le bloc.
 PARAMETRES : L'adresse du traiteur
 			 le bloc a integre
 RETOUR : Rien
@@ -95,26 +95,26 @@ void entree_bloc(t_traiteur * traiteur, t_block bloc, int taille) {
 	t_guichet guich = { 0 };
 	int re = 0;
 
-	while (ptr_lg != NULL) {
-		block = donner_block_termine(&(ptr_lg->data));
+	while (ptr_lg != NULL) { //on traite chaque guichet
+		block = donner_block_termine(&(ptr_lg->data)); //on fait le traitement du guichet
 
 		if (block.taille_bloc != 0) { //lorsquqe le bloc emis n'est pas vide
-			enfiler_block_chainee(&(traiteur->file_garde), block); //enfiler le bloc dans la file \
-																	 de garde
-			traiteur->nbr_block = traiteur->file_garde.nb_block; //maintenir le comteur a jour
+			enfiler_block_chainee(&(traiteur->file_garde), block); //enfiler le bloc dans la file 
+																   //de garde
+			traiteur->nbr_block = traiteur->file_garde.nb_block; //maintenir le comteur a jour       //**********
 		}
 
 		ptr_lg = ptr_lg->g_apres; //on va au prochain guichet
 	}
 
 	if (bloc.taille_bloc != 0) { //si le bloc recu en parametre
-		ptr_lg = chercher_g_vide(traiteur->liste_guichet); //on va chercher un guichet avec un \
-														   espace libre
+		ptr_lg = chercher_g_vide(traiteur->liste_guichet); //on va chercher un guichet avec un 
+														   //espace libre
 		if (ptr_lg == NULL) {
 			re = ajouter_g_fin(traiteur->liste_guichet, taille); //ajouter un nouveau noeud
 			traiteur->nbr_gichet++;
-			ptr_lg = chercher_g_fin(traiteur->liste_guichet); //aller chercher l'adresse du \
-																dernier noeud
+			ptr_lg = chercher_g_fin(traiteur->liste_guichet); //aller chercher l'adresse du 
+															  //dernier noeud
 		}
 
 		re = reception_block(&(ptr_lg->data), bloc); //on enfile le bloc dans le guichet
@@ -124,11 +124,11 @@ void entree_bloc(t_traiteur * traiteur, t_block bloc, int taille) {
 
 /*************************************** SORTIE_BLOCK ********************************************/
 /* MUTATRICE
-Description : Si la file de garde du traiteur nâ€™est pas vide, la fonction retourne le bloc non-vide
-quâ€™elle en extrait du dÃ©but de la file. Sinon retour dâ€™un bloc vide.
+Description : Si la file de garde du traiteur n’est pas vide, la fonction retourne le bloc non-vide
+qu’elle en extrait du début de la file. Sinon retour d’un bloc vide.
 PARAMETRES : adresse du traiteur
 RETOUR : un t_bloc (vide si la file est vide)
-SPECIFICATIONS : le traiteur doit Ãªtre initialise
+SPECIFICATIONS : le traiteur doit être initialise
 */
 t_block sortie_block(t_traiteur * traiteur) {
 
@@ -141,12 +141,13 @@ t_block sortie_block(t_traiteur * traiteur) {
 Description : Libere l'espace memoire du traiteur
 PARAMETRES : l'adresse du t_traiteur
 RETOUR : "1" si les liberations se sont faits et "0" sinon
-SPECIFICATIONS : L traiteur doivent Ãªtre initialise
+SPECIFICATIONS : L traiteur doivent être initialise
 */
 int free_traiteur(t_traiteur * traiteur) {
 	
-	free_liste_g(traiteur->liste_guichet);
-	free_file_block(&(traiteur->file_garde));
+	free_liste_lg(traiteur->liste_guichet);
+	free_block_chainee(&(traiteur->file_garde));
+	
 	return 1;
 }
 /*************************************************************************************************/

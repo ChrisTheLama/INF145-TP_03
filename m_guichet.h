@@ -20,9 +20,9 @@ free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
 #define  __MODULE__GUICHET__
 
 /*************************************************************************************************/
-//qui permet de dÃ©sactiver certains warnings du compilateur
+//qui permet de désactiver certains warnings du compilateur
 #define _CRT_SECURE_NO_WARNINGS  
-// Librairies usuelles Ã  inclure
+// Librairies usuelles à inclure
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -77,7 +77,7 @@ Description : Retourne le nombre de t_block non_vide dans le guichet (dans la fi
 celui en traitement
 PARAMETRES : l'adresse du guichet evalue
 RETOUR : le nombre de t_block dans le guichet
-SPECIFICATIONS : Le guichet doit Ãªtre initialise
+SPECIFICATIONS : Le guichet doit être initialise
 */
 int get_nb_bloc_guichet(t_guichet* guich);
 /*************************************************************************************************/
@@ -88,26 +88,26 @@ Description : Si possible, insere le bloc dans la file du guichet et retourne 1,
 PARAMETRES :l'adresse du t_guichet 
 	& le bloc 
 RETOUR : Renvoit un "1" si l'insertion a reussit & "0" sinon.
-SPECIFICATIONS : La file doit Ãªtre initialisee
+SPECIFICATIONS : La file doit être initialisee
 */
 int reception_block(t_guichet* guich, t_block bloc);
 /*************************************************************************************************/
 
 /************************************* DONNER_BLOCK_TERMINE **************************************/
 /* MUTATRICE
-Description : Dont le fonctionnement est donnÃ© par lâ€™algorithme suivant : 
-Â·         Si le compte Ã  rebours est > 0,  le dÃ©crÃ©menter de 1,
+Description : Dont le fonctionnement est donné par l’algorithme suivant : 
+·         Si le compte à rebours est > 0,  le décrémenter de 1,
 o   retourner un bloc vide.
-Â·         Sinon (le compte Ã  rebours est <= 0), 
+·         Sinon (le compte à rebours est <= 0), 
 o   copier le bloc en traitement dans un bloc temporaire
-o   dÃ©filer si possible un bloc de la file qui devient le nouveau bloc en traitement dÃ©terminer son
-		temps de traitement qui sera assignÃ© Ã  son compte Ã  rebours
-o   sinon, bloc en traitement = bloc vide et compte Ã  rebours = 0
+o   défiler si possible un bloc de la file qui devient le nouveau bloc en traitement déterminer son
+		temps de traitement qui sera assigné à son compte à rebours
+o   sinon, bloc en traitement = bloc vide et compte à rebours = 0
 o   retourner le bloc temporaire
 PARAMETRES : l'adresse du t_guichet
 RETOUR : Retourne un t_block : vide si le compteur (compte_rebours) n'est pas a zero
-							   celui en traitement si le compteur est Ã  zero
-SPECIFICATIONS : La file et le guichet doivent Ãªtre initialises
+							   celui en traitement si le compteur est à zero
+SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 t_block donner_block_termine(t_guichet * guich);
 /*************************************************************************************************/
@@ -117,7 +117,7 @@ t_block donner_block_termine(t_guichet * guich);
 Description : Libere les tableaux dynamique du guichet
 PARAMETRES : l'adresse du t_guichet
 RETOUR : "1" si les liberations se sont faits et "0" sinon
-SPECIFICATIONS : La file et le guichet doivent Ãªtre initialises
+SPECIFICATIONS : La file et le guichet doivent être initialises
 */
 int free_guichet(t_guichet * guich);
 /*************************************************************************************************/
@@ -127,7 +127,7 @@ int free_guichet(t_guichet * guich);
 Description : Informe si le guichet a un espace vide
 PARAMETRES : l'adresse du guichet evalue
 RETOUR : retourne '1' si il y a de l'espace dans le guichet, '0' sinon
-SPECIFICATIONS : Le guichet doit Ãªtre initialise
+SPECIFICATIONS : Le guichet doit être initialise
 */
 int guichet_case_vide(t_guichet* guich);
 /*************************************************************************************************/
