@@ -14,10 +14,9 @@ Le module offre plusieurs fonctions d'interface, certaines modifient le
 système de découpage(mutatrices) et d'autres le renseigent sans
 modifications (informatrices).
 Tout est clairement indiqué dans les déclarations.
-
 */
 /*==========================================================*/
-#ifndef __PAQUETAGE__MULTI__
+#ifndef __PAQUETAGE__MULTI__ 
 #define __PAQUETAGE__MULTI__
 
 /*==========================================================*/
@@ -41,15 +40,16 @@ Tout est clairement indiqué dans les déclarations.
 // LES CONSTANTES
 
 // le nombre maximum de fichiers que peut traiter simultanement le module
-#define MAX_FICHIERS_DECOUPAGE  20
+
+#define MAX_FICHIERS_DECOUPAGE  20  
 
 // pour définir les tailles minimum et maximum d'un bloc
 // de bytes issu du processus de découpage
 // ATTENTION le dernier bloc obtenu d'un fichier pourrait être plus petit
 // que TAILLE_MIN_BLOCK
 
-#define TAILLE_MIN_BLOCK 400
-#define TAILLE_MAX_BLOCK 80000
+#define TAILLE_MIN_BLOCK 400		// NE PAS CHANGER
+#define TAILLE_MAX_BLOCK 8000		// NE PAS CHANGER
 /*==========================================================*/
 
 /*==========================================================*/
@@ -68,7 +68,7 @@ typedef struct{
 
 	unsigned char bloc_final;   //1 si c'est le dernier bloc du découpage, 0 sinon
 
-}t_block;
+}t_block; //  PUBLIC
 /*==========================================================*/
 
 // DÉCLARATIONS DES FONCTIONS PUBLIQUES
@@ -84,7 +84,7 @@ SORTIE: rien
 
 SPECS: aucun fichier n'est en découpage
 */
-void init_decoupage(void);
+void init_decoupage(void);		// appeler au debut dans le main
 /*==========================================================*/
 
 
@@ -209,11 +209,14 @@ int id_fichier_valide(unsigned int f_identifiant);
 
 /*==========================================================*/
 /*==========================================================*/
+
 // ATTENTION CES DEUX PROCÉDURES VOUS SERONT TRÈS UTILES EN DÉBUG
 // c'est à vous de les implémenter
+
 /*==========================================================*/
 // Cette procédure ne fait que donner un affichage simple
 // des propriétés d'un bloc reçu en référence
+// printf(); Attention on recoit l'adresse (référence
 void print_bloc(const t_block * p_bloc);
 
 /*==========================================================*/

@@ -1,11 +1,11 @@
 /*----------------------------------------------------*/
 /* 	par hugues saulnier (révision E. Thé, hiver 2018) */
 /*----------------------------------------------------*/
-/* 
-	je ne me sers que de l'infame rand dans cette implementation
-	notre mersenne twister nous donnerais des capacités bien plus grandes 
-	pour varier les distributions (par exemple utiliser une normale pour 
-	la taille des lectures de bytes) mais j'ai choisi de m'en passer.
+/*
+je ne me sers que de l'infame rand dans cette implementation
+notre mersenne twister nous donnerais des capacités bien plus grandes
+pour varier les distributions (par exemple utiliser une normale pour
+la taille des lectures de bytes) mais j'ai choisi de m'en passer.
 *//*==========================================================*/
 #include "m_decoupage.h"
 
@@ -26,7 +26,7 @@ typedef struct {
 	char nom_fichier[TAILLE_NOM]; //simple strcpy() de son nom
 	int taille_fichier;           //calculée avec fonctions de fichiers
 
-	// infos mises à date lors de l'émission des blocs
+								  // infos mises à date lors de l'émission des blocs
 	int taille_restante;          //initialement = taille_fichier
 	int nb_blocks_emis;           //initialement = 0
 
@@ -347,12 +347,12 @@ int retirer_fichier(unsigned int f_identifiant) {
 
 /*==========================================================*/
 /* STRATÉGIE
-  checher un fichier qui peut encore emettre un bloc (selection aleatoire)
-  si non return d'un bloc vide
-  si oui un vrai bloc sera emis
+checher un fichier qui peut encore emettre un bloc (selection aleatoire)
+si non return d'un bloc vide
+si oui un vrai bloc sera emis
 
-  on va lire un bloc de bytes du fichier ( ce peut etre le dernier)
-  puis on ajuste les membres du bloc et du fichier
+on va lire un bloc de bytes du fichier ( ce peut etre le dernier)
+puis on ajuste les membres du bloc et du fichier
 /*==========================================================*/
 t_block get_bloc(void) {
 
@@ -361,12 +361,12 @@ t_block get_bloc(void) {
 	int taille_alea, taille;
 	int taille_lecture;      // pour le nombre de bytes lus  dans le fichier
 
-	// buffer local pour la lecture dans le fichier
+							 // buffer local pour la lecture dans le fichier
 	unsigned char local[TAILLE_MAX_BLOCK];
 
 	nouveau = block_vide(); // initialement tous ses champs nuls
 
-	// chercher aleatoirement  un fichier
+							// chercher aleatoirement  un fichier
 	position_fichier = get_fichier_aleatoire();
 	// si y'en a pas retour du bloc vide
 	if (position_fichier == -1) return nouveau;
@@ -388,9 +388,9 @@ t_block get_bloc(void) {
 		taille_lecture = fread(local, 1, taille, tablo_fichiers[position_fichier].fichier);
 	}
 	// sinon lecture d'un nombre aleatoire de bytes 
-	else {	
-		taille_alea = TAILLE_MIN_BLOCK 
-			          + (int)(((1.0*rand()) / RAND_MAX) * (TAILLE_MAX_BLOCK - TAILLE_MIN_BLOCK));
+	else {
+		taille_alea = TAILLE_MIN_BLOCK
+			+ (int)(((1.0*rand()) / RAND_MAX) * (TAILLE_MAX_BLOCK - TAILLE_MIN_BLOCK));
 		taille_lecture = fread(local, 1, taille_alea, tablo_fichiers[position_fichier].fichier);
 	}
 
@@ -399,8 +399,8 @@ t_block get_bloc(void) {
 	assert(nouveau.buffer = malloc(taille_lecture + 4));
 
 	// 2 ajuster la taille restante du fichier
-	tablo_fichiers[position_fichier].taille_restante = tablo_fichiers[position_fichier].taille_fichier 
-		                                               - ftell(tablo_fichiers[position_fichier].fichier);
+	tablo_fichiers[position_fichier].taille_restante = tablo_fichiers[position_fichier].taille_fichier
+		- ftell(tablo_fichiers[position_fichier].fichier);
 	// 3 fixer la taille du nouveau bloc
 	nouveau.taille_bloc = taille_lecture;
 
@@ -419,26 +419,23 @@ t_block get_bloc(void) {
 // Cette procédure ne fait que donner un affichage simple
 // des propriétés d'un bloc reçu en référence
 /*==========================================================*/
-void print_bloc(const t_block * p_bloc){
+void print_bloc(const t_block * p_bloc) {
+	//affichage du numero du bloc decoouper pour le fichier
+	printf("\nBloc #%u ", p_bloc->num_bloc); 
+	//affichage de l'etat du fichier ou le bloc a ete decouper
+	print_etat_fichier(p_bloc->f_identifiant);
+	//affichage si le bloc est le dernier bloc d'information du fichier
+	(p_bloc->bloc_final == (unsigned char)'1') ? printf(" ( FINAL )") : 0;
+	//affichage de l'identifiant du bloc
+	printf("\n\t>ID : %u", p_bloc->f_identifiant);
+	//affichage de la taille de la memoire decouper du fichier 
+	printf("\t>Taille : %u", p_bloc->taille_bloc);
+	//affichage de l'adresse ou la memoire est garde
+	printf("\t>Adresse : %X", p_bloc->buffer);
+	//espace pourr faciliter la lecture des differents print_bloc()
+	printf("\n");
 
-	// impression du bloc
-	//# bloc
-	printf("Bloc Numero: %u\n", p_bloc->num_bloc); 
-
-	//id fichier + taile bloc
-	printf("id_Fichier:  %u \nTaille: %u\n", p_bloc->f_identifiant, p_bloc->taille_bloc); 
-	
-	// impression si bloc final
-	if (p_bloc->bloc_final == 1) {
-
-		printf("BLOC FINAL\n\n");
-
-	}
-	else{
-
-		printf("\n");
-	}
-
+	return;
 }
 /*==========================================================*/
 
@@ -448,18 +445,10 @@ void print_bloc(const t_block * p_bloc){
 // faites des printf expliquant les résultats des informations
 // obtenues avec l'identifiant reçu
 /*==========================================================*/
-void print_etat_fichier(unsigned int f_identifiant){
-
-	//impression de l'état du fichier
-	//id fichier
-	printf("Fichier: %u \t Taille: %d\n", f_identifiant, get_taille_fichier(f_identifiant)); 
-
-	//nombre de bloc
-	printf("Nombre de bloc emis: %d\n", get_nb_blocs_emis(f_identifiant)); 
-
-	//taille restantes
-	printf("Taille restante: %d\n\n", get_taille_restante(f_identifiant)); 
-
+void print_etat_fichier(unsigned int f_identifiant) {
+	//affichage de l'etat du fichier ou il y a eu decoupage
+	(id_fichier_valide(f_identifiant) == 1) ? printf("( VALIDE )") : printf(" ( NON_VALIDE )");
+	return;
 }
 /*==========================================================*/
 /*==========================================================*/

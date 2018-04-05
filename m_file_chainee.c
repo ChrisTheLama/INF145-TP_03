@@ -7,44 +7,15 @@ regroupement des guichets. Oermet de stocker les blocks qui sortent des guichets
 *//*=============================================================================================*/
 #include "m_file_chainee.h"
 /*===============================================================================================*/
-/*                                         AIDE-MEMOIRE                                          */
+
 /*===============================================================================================*/
-/*
-// type qui defini un noeud dans la liste chainee de block
-typedef struct noeud_block t_noeud;
-
-// type qui defini un lien.
-typedef t_noeud* t_lien_block;
-
-struct noeud_block {
-
-	t_block data;					//pointeur du block
-
-	t_lien_block precedent;			//pointeur du bloc precedent
-
-	t_lien_block suivant;			//pointeur du bloc suivant
-
-};
-
-// le type t_file_block_chainee est publique,
-// il donne les proprietes d'un element d'une file de block
-typedef struct {
-
-	t_lien_block tete;				//position du debut de la file
-
-	t_lien_block queue;				//position de la fin de la file
-
-	int nb_block;					//nombre d'element dans la file
-
-}t_file_block_chainee;
-*/
-/*===============================================================================================*/
-/*                                     CONSTANTES PRIVeES                                        */
+/*                                     CONSTANTES PRIVÉES                                        */
 /*===============================================================================================*/
 
 
+
 /*===============================================================================================*/
-/*                                     FONCTIONS PRIVeES                                         */
+/*                                     FONCTIONS PRIVÉES                                         */
 /*===============================================================================================*/
 
 /*************************************************************************************************/
@@ -132,8 +103,8 @@ int enfiler_block_chainee(t_file_block_chainee* file, t_block bloc) {
 //  defiler un block
 /*************************************************************************************************/
 t_block defiler_block_chainee(t_file_block_chainee* file) {
-	t_block bloc = { 0 };
-	t_lien_block tete_temp = { 0 };
+	t_block bloc = { 0 }; // bloc de reception
+	t_lien_block tete_temp = { 0 };  
 
 	//si la file est vide
 	if (file->nb_block < 1) {
@@ -147,7 +118,9 @@ t_block defiler_block_chainee(t_file_block_chainee* file) {
 		bloc = file->tete->data;
 
 		//libere la tete
-		free(file->tete); file->tete = NULL;
+		free(file->tete); 
+		file->tete = NULL;		//On enleve les liens avec le noeud
+		file->queue = NULL;		//on enleve les liens avec le noeud
 	}
 
 	//si la file a plus d'un element
@@ -185,15 +158,8 @@ PARAMETRE(s): l'adresse de la file de garde
 SORTIE:	le nombre de t_bloc dans la file de garde
 SPECS: La file doit etre initialisee
 */
-int get_nb_fileg(t_file_block_chainee* file) {
-	int nb_bloc = 0; // compteur de bloc
-	t_noeud * p = file->tete;
-	
-	while (p != NULL) { //tant qu'il y a des noeud dans la file 
-		(p->data.taille_bloc != 0) ? nb_bloc++ : 0 ; //si l'espace t_bloc est utilisÃ©
-		p = p->suivant; //on evalue le prochain noeud
-	}
-	return nb_bloc;
+int get_nb_fileg(const t_file_block_chainee* file) {
+	return file->nb_block;
 }
 /*===============================================================================================*/
 

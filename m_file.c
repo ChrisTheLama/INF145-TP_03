@@ -7,12 +7,12 @@ Ce module inclus les fonctions pour la gestion des files de t_block dans les gui
 #include "m_file.h"
 
 /*===============================================================================================*/
-/*                                     CONSTANTES PRIVÃ‰ES                                        */
+/*                                     CONSTANTES PRIVÉES                                        */
 
 
 /*===============================================================================================*/
 /*===============================================================================================*/
-/*                                     FONCTIONS PRIVÃ‰ES                                         */
+/*                                     FONCTIONS PRIVÉES                                         */
 
 
 /*===============================================================================================*/
@@ -24,11 +24,11 @@ Ce module inclus les fonctions pour la gestion des files de t_block dans les gui
 /*===============================================================================================*/
 t_file_block init_file_block(int taille) {
 
-	//dÃ©claration d'une file
+	//déclaration d'une file
 	t_file_block temp_file = { 0 };
 
-	//assigner l'espace mÃ©moire correspondant
-	temp_file.tab_block = (t_block*) calloc(taille, sizeof(t_block));
+	//assigner l'espace mémoire correspondant
+	temp_file.tab_block = (t_block*)calloc(taille, sizeof(t_block));
 
 	if (temp_file.tab_block != NULL) {
 
@@ -38,6 +38,7 @@ t_file_block init_file_block(int taille) {
 		//init fin de la file
 		temp_file.fin = -1;
 		temp_file.debut = 0;
+
 	}
 
 	//retourne la file
@@ -45,64 +46,67 @@ t_file_block init_file_block(int taille) {
 }
 
 /*===============================================================================================*/
-//  dÃ©truire la file de block
+//  détruire la file de block
 /*===============================================================================================*/
 void free_file_block(t_file_block* file) {
 
-	//libÃ©re l'espace mÃ©moire de la file
+	//libére l'espace mémoire de la file
 	free(file->tab_block); 
 	file->tab_block = NULL;
 
-	//efface les donnÃ©es de la file
+	//efface les données de la file
 	file->taille = 0;
 	file->debut = 0;
 	file->fin = 0;
 	file->nb_block = 0;
-	return;
+
 }
 
 /*===============================================================================================*/
 //  enfiler un block
 /*===============================================================================================*/
 int enfiler_block(t_file_block* file, t_block block) {
-
-	//si la file n'est pas pleine
-	if (file->taille > file->nb_block) {
 	
-		//changer la position de fin de la file
-		file->fin = (file->fin + 1) % file->taille;
+	if (block.taille_bloc != 0) {
+		//si la file n'est pas pleine
+		if (file->taille > file->nb_block) {
 
-		//enfiler un block
-		file->tab_block[file->fin] = block;
+			//changer la position de fin de la file
+			file->fin = (file->fin + 1) % file->taille;
 
-		//changer nb de block dans la file
-		file->nb_block += 1;
+			//enfiler un block
+			file->tab_block[file->fin] = block;
 
-		return 1;		//enfilage rÃ©ussi
+			//changer nb de block dans la file
+			file->nb_block += 1;
+
+			return 1;		//enfilage réussi
+		}
 	}
-	return 0;			//Ã©chec de l'enfilage
+	return 0;		//échec de l'enfilage
 }
 
 /*===============================================================================================*/
-//  dÃ©filer un block
+//  défiler un block
 /*===============================================================================================*/
 int defiler_block(t_file_block* file, t_block* block) {
 
 	//si la file n'est pas vide
 	if (file->nb_block > 0) {
 
-		//dÃ©filer un block
+		//défiler un block
 		*block = file->tab_block[file->debut];
 
-		//changer position du dÃ©but
+		//changer position du début
 		file->debut = (file->debut+1) % file->taille;
 
 		//changer nb de block dans la file
 		file->nb_block -= 1;
 
-		return 1;		//dÃ©filage rÃ©ussi
+		return 1;		//défilage réussi
 	}
-	return 0;			//Ã©chec du dÃ©filage
+	return 0;		//échec du défilage
 }
+
 /*===============================================================================================*/
 /*===============================================================================================*/

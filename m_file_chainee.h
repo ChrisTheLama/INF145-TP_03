@@ -54,7 +54,7 @@ typedef struct {
 	t_lien_block queue;				//position de la fin de la file
 
 	int nb_block;					//nombre d'element dans la file
-
+	int nb_max;
 }t_file_block_chainee;
 /*===============================================================================================*/
 
@@ -104,7 +104,7 @@ PARAMETRE(s): l'adresse de la tete de la file de garde
 SORTIE:	le nombre de t_bloc dans la file de garde
 SPECS: La file doit etre initialisee
 */
-int get_nb_fileg(t_file_block_chainee* file);
+int get_nb_fileg(const t_file_block_chainee* file);
 /*===============================================================================================*/
 
 /*====================================== FREE_BLOCK_CHAINEE =====================================*/

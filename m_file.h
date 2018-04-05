@@ -3,7 +3,7 @@
 /*-----------------------------------------------------------------------------------------------*/
 
 /*===============================================================================================*/
-/*Le module file comprend les fonctions utiles pour le traitement d'une file de t_block. Cette 
+/*Le module file comprend les fonctions utiles pour le traitement d'une file de t_block. Cette
 file est utilisé dans le module de guichet.
 */
 /*===============================================================================================*/
@@ -47,7 +47,7 @@ typedef struct {
 // DÉCLARATIONS DES FONCTIONS PUBLIQUES
 /*===============================================================================================*/
 /* MUTATRICE
-DESCRIPTION: initialiser la file de block, une action obligée pour ensuite obtenir l'ensemble 
+DESCRIPTION: initialiser la file de block, une action obligée pour ensuite obtenir l'ensemble
 des services offerts par le module
 
 PARAMETRE(s): taille de la file
@@ -68,7 +68,7 @@ PARAMETRE(s): la file à détruire
 
 SORTIE: rien
 
-SPECS: la file doit être vide puisque la fonction ne libère pas 
+SPECS: la file doit être vide puisque la fonction ne libère pas
 l'espace mémoire des blocks qu'elle pourrait contenir
 */
 void free_file_block(t_file_block* file);
@@ -76,15 +76,15 @@ void free_file_block(t_file_block* file);
 
 /*===============================================================================================*/
 /* MUTATRICE
-DESCRIPTION: enfile un block dans la file. Le block est ajouter à la fin de la file. Il doit y 
+DESCRIPTION: enfile un block dans la file. Le block est ajouter à la fin de la file. Il doit y
 avoir l'espace libre dans la file pour ajouter le bloc.
 
 PARAMETRE(s):	-la file
-				-le block a ajouter
+-le block a ajouter
 
 SORTIE: 1/0 réussite/échec
 
-SPECS: si la file est pleine, la fonction retourne 0 et le 
+SPECS: si la file est pleine, la fonction retourne 0 et le
 block n'est pas enfiler
 */
 int enfiler_block(t_file_block* file, t_block block);
@@ -95,7 +95,7 @@ int enfiler_block(t_file_block* file, t_block block);
 DESCRIPTION: défile un block de la file. La file doit avoir au moins un élément dans sa mémoire.
 
 PARAMETRE(s):	-la file
-				-le block dépilé
+-le block dépilé
 
 SORTIE: 1/0 réussite/échec
 
