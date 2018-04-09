@@ -6,28 +6,14 @@
 #include "m_guichet.h"
 
 /*===============================================================================================*/
-/*                                       - AIDE-MEMOIRE -
-typedef struct {
-
-t_file_block file; //pointeur d'une file d'attente
-t_block bloc_traite; //bloc en traitement
-int compte_rebours; //compte a rebours avant l'envoit du bloc
-int ** matrice_temps; //pointeur vers une matrice dynamique
-
-} t_guichet;
-
-*/
-/*===============================================================================================*/
-
-/*===============================================================================================*/
 /*===================================== FONCTIONS PRIVEES =======================================*/
 /*===============================================================================================*/
 
 /*************************************** INIT_MAT_TEMPS ******************************************/
 /* CONSTRUCTEUR
-Description : Sert à obtenir l’allocation dynamique de la matrice carrée (TAILLE x TAILLE) puis à
-la remplir de valeurs aléatoires dans l’intervalle [MINV..MAXV] défini par les constantes
-appropriées.  Cette fonction ne sera utilisée que par la fonction init_guichet.
+Description : Sert Ã  obtenir lâ€™allocation dynamique de la matrice carrÃ©e (TAILLE x TAILLE) puis Ã 
+la remplir de valeurs alÃ©atoires dans lâ€™intervalle [MINV..MAXV] dÃ©fini par les constantes
+appropriÃ©es.  Cette fonction ne sera utilisÃ©e que par la fonction init_guichet.
 PARAMETRES : AUCUN
 RETOUR : l'Adresse du pointeur de la matrice (NULL si l'allocation a echouee)
 SPECIFICATIONS : AUCUNE
@@ -43,28 +29,30 @@ static int **init_mat_temps(void) {
 	srand((int)time(NULL)); //initialisation de la fonction rand()
 
 	ptr_mat = (int**)malloc(TAILLE * sizeof(int*)); //tableau de pointeur de taille TAILLE
-	if (ptr_mat == NULL) printf("ERREUR POINTEUR POINTEUR DU TAB DYNAMIQUE");
-
-	for (i = 0; i < TAILLE; i++) {
+	if (ptr_mat == NULL) printf("ERREUR POINTEUR POINTEUR DU TAB DYNAMIQUE"); //message d'erreur 
+							// si l'allocation a echoue
+	for (i = 0; i < TAILLE; i++) { //pointeur pour chaque rangee
 		ptr_mat[i] = (int*)malloc(TAILLE * sizeof(int));
-		if (ptr_mat[i] == NULL) printf("ERREUR POINTEUR %d DU TAB DYNAMIQUE",i);
+		if (ptr_mat[i] == NULL) printf("ERREUR POINTEUR %d DU TAB DYNAMIQUE", i);//message d'erreur 
+							// si l'allocation a echoue
 	}
 
 	//Remplissage de la matrice
-	for (i = 0; i < TAILLE; i++) {
-		for (j = 0; j < TAILLE; j++) {
-			ptr_mat[i][j] = (int) (MINV + (rand() % (MAXV-MINV)));
+	for (i = 0; i < TAILLE; i++) { //Pour chaque rangee
+		for (j = 0; j < TAILLE; j++) { //Pour chaque case de la rangee
+			ptr_mat[i][j] = (int)(MINV + (rand() % (MAXV - MINV))); //nombre aleatoire entre une 
+										//valeur minimum et maximal (inferieur a 32767)
 		}
 	}
 
-	return ptr_mat;
+	return ptr_mat; //retourne l'adresse du pointeur double
 }
 
 /************************************** DETERMINER_TEMPS *****************************************/
 /* INFORMATRICE
-Description : Sert à déterminer le temps de traitement d’un bloc dans le guichet, le temps est
-obtenu de la somme des valeurs d’une ligne de la matrice de la colonne 0 jusqu’à la colonne
-d’arrêt qui ne dépend que de la taille du bloc admis au traitement.
+Description : Sert Ã  dÃ©terminer le temps de traitement dâ€™un bloc dans le guichet, le temps est
+obtenu de la somme des valeurs dâ€™une ligne de la matrice de la colonne 0 jusquâ€™Ã  la colonne
+dâ€™arrÃªt qui ne dÃ©pend que de la taille du bloc admis au traitement.
 PARAMETRES : AUCUN
 RETOUR : Le temps d'attente pour le bloc
 SPECIFICATIONS : AUCUNE
@@ -74,16 +62,18 @@ static int determiner_temps(t_guichet * guich);
 static int determiner_temps(t_guichet * guich) {
 	if (guich->bloc_traite.taille_bloc != 0 && guich->matrice_temps != NULL) {
 		//on s'assure que le bloc en traitement n'est pas un block vide et que la matrcice existe	
-		int somme = 0, ligne = 0, col_arr = 0;
-		int i = 0;
+		int somme = 0, rangee = 0, col_arr = 0; //compteur
+		int i = 0; //compteur pour la boucle
 
-		ligne = (int)((guich->bloc_traite.f_identifiant) % TAILLE);
-		col_arr = (int) (((float)(guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE);
+		//formule pour determiner la rangee utilisee : 
+		rangee = (int)((guich->bloc_traite.f_identifiant) % TAILLE);
+		//formule pour determiner la colonne ou le calcul arrete
+		col_arr = (int)(((float)(guich->bloc_traite.taille_bloc) / TAILLE_MAX_BLOCK) * TAILLE);
 
-		for (i = 0; i <= col_arr; i++) {
-			somme += (guich->matrice_temps)[ligne][i];
+		for (i = 0; i <= col_arr; i++) { //boucle pour determiner le nombre de cycle d'attente
+			somme += (guich->matrice_temps)[rangee][i]; //addition de la valeur des cases
 		}
-		
+
 		return somme;
 	}
 }
@@ -93,19 +83,19 @@ static int determiner_temps(t_guichet * guich) {
 Description : Libere les tableaux dynamique de la matrice dynamique
 PARAMETRES : l'adresse du t_guichet
 RETOUR : "1" si les liberations se sont faits et "0" sinon
-SPECIFICATIONS : La file et le guichet doivent être initialises
+SPECIFICATIONS : La file et le guichet doivent Ãªtre initialises
 */
 /*************************************************************************************************/
 static int free_mat(t_guichet* guich);
 static int free_mat(t_guichet* guich) {
-	int compteur = 0;
+	int compteur = 0; //compteur
 
-	for (compteur = 0; compteur < TAILLE; compteur++) {
-		free(guich->matrice_temps[compteur]);
-		guich->matrice_temps[compteur] = NULL;
+	for (compteur = 0; compteur < TAILLE; compteur++) { //on libere les rangees 
+		free(guich->matrice_temps[compteur]); //liberation
+		guich->matrice_temps[compteur] = NULL; //on enleve le lien avec la rangees
 	}
 
-	free(guich->matrice_temps); guich->matrice_temps = NULL;
+	free(guich->matrice_temps); guich->matrice_temps = NULL; //on libere le tableau des pointeurs
 	return 1;
 }
 
@@ -125,11 +115,11 @@ SPECIFICATIONS : la taille doit etre positif
 */
 /*************************************************************************************************/
 t_guichet init_guichet(int taille_file) {
-	t_guichet guich = { 0 };
+	t_guichet guich = { 0 };  //initialiser un guichet vide 
 
-	if (taille_file > 0) {
-		guich.file = init_file_block(taille_file);
-		guich.matrice_temps = init_mat_temps();
+	if (taille_file > 0) { //on valide l'entree
+		guich.file = init_file_block(taille_file); //on initialise la file
+		guich.matrice_temps = init_mat_temps(); //on initialise le tableau dynamique
 	}
 	return guich;
 }
@@ -140,12 +130,12 @@ Description : Retourne le nombre de t_block non_vide dans le guichet (dans la fi
 celui en traitement
 PARAMETRES : l'adresse du guichet evalue
 RETOUR : le nombre de t_block dans le guichet
-SPECIFICATIONS : Le guichet doit être initialise
+SPECIFICATIONS : Le guichet doit Ãªtre initialise
 */
 /*************************************************************************************************/
 int get_nb_bloc_guichet(t_guichet* guich) {
 	return (guich->bloc_traite.taille_bloc == 0) ? guich->file.nb_block :
-		guich->file.nb_block + 1;
+		guich->file.nb_block + 1; //si il a un bloc dans le bloc traite
 }
 
 /*************************************** RECEPTION_BLOCK *****************************************/
@@ -154,7 +144,7 @@ Description : Si possible, insere le bloc dans la file du guichet et retourne 1,
 PARAMETRES :l'adresse du t_guichet
 & le bloc
 RETOUR : Renvoit un "1" si l'insertion a reussit & "0" sinon.
-SPECIFICATIONS : La file doit être initialisee
+SPECIFICATIONS : La file doit Ãªtre initialisee
 */
 /*************************************************************************************************/
 int reception_block(t_guichet* guich, t_block bloc) {
@@ -163,42 +153,42 @@ int reception_block(t_guichet* guich, t_block bloc) {
 
 /************************************* DONNER_BLOCK_TERMINE **************************************/
 /* MUTATRICE
-Description : Dont le fonctionnement est donné par l’algorithme suivant :
-·         Si le compte à rebours est > 0,  le décrémenter de 1,
+Description : Dont le fonctionnement est donnÃ© par lâ€™algorithme suivant :
+Â·         Si le compte Ã  rebours est > 0,  le dÃ©crÃ©menter de 1,
 o   retourner un bloc vide.
-·         Sinon (le compte à rebours est <= 0),
+Â·         Sinon (le compte Ã  rebours est <= 0),
 o   copier le bloc en traitement dans un bloc temporaire
-o   défiler si possible un bloc de la file qui devient le nouveau bloc en traitement déterminer son
-temps de traitement qui sera assigné à son compte à rebours
-o   sinon, bloc en traitement = bloc vide et compte à rebours = 0
+o   dÃ©filer si possible un bloc de la file qui devient le nouveau bloc en traitement dÃ©terminer son
+temps de traitement qui sera assignÃ© Ã  son compte Ã  rebours
+o   sinon, bloc en traitement = bloc vide et compte Ã  rebours = 0
 o   retourner le bloc temporaire
 PARAMETRES : l'adresse du t_guichet
 RETOUR : Retourne un t_block : vide si le compteur (compte_rebours) n'est pas a zero
-celui en traitement si le compteur est à zero
-SPECIFICATIONS : La file et le guichet doivent être initialises
+celui en traitement si le compteur est Ã  zero
+SPECIFICATIONS : La file et le guichet doivent Ãªtre initialises
 */
 /*************************************************************************************************/
 t_block donner_block_termine(t_guichet * guich) {
-	t_block bloc_tempo = { 0 }, bloc_vide = { 0 };
+	t_block bloc_tempo = { 0 }, bloc_vide = { 0 }; 
 
-	if (guich->compte_rebours > 0) {
-		guich->compte_rebours--;
-		return bloc_vide;
+	if (guich->compte_rebours > 0) { //si le compte a rebours est enclenche
+		guich->compte_rebours--; //decrementer le compte a rebours
+		return bloc_vide; //offrir un bloc vide
 	}
-	else {
-		bloc_tempo = guich->bloc_traite;
-		//defiler_block(&(guich->file), &(guich->bloc_traite)); 
+	else { //lorsque le compteur est a zero
+		bloc_tempo = guich->bloc_traite; //on transfert le bloc 
 
 		if (defiler_block(&(guich->file), &(guich->bloc_traite))) {
-			guich->compte_rebours = determiner_temps(guich);
+			guich->compte_rebours = determiner_temps(guich); //on determine le temps d'attente
 			return bloc_tempo;
 		}
 		else if (guich->file.nb_block == 0 && guich->bloc_traite.taille_bloc != 0) {
 			bloc_tempo = guich->bloc_traite; //transfert le bloc traite
 			guich->bloc_traite = bloc_vide; //vide le bloc traite
 			return bloc_tempo;
-		}else{
-			guich->compte_rebours = 0;
+		}
+		else {
+			guich->compte_rebours = 0; //on vide le contenu
 			return bloc_vide;
 		}
 	}
@@ -209,14 +199,14 @@ t_block donner_block_termine(t_guichet * guich) {
 Description : Libere les tableaux dynamique du guichet
 PARAMETRES : l'adresse du t_guichet
 RETOUR : "1" si les liberations se sont faits et "0" sinon
-SPECIFICATIONS : La file et le guichet doivent être initialises
+SPECIFICATIONS : La file et le guichet doivent Ãªtre initialises
 */
 /*************************************************************************************************/
 int free_guichet(t_guichet * guich) {
-	
-	free_mat(guich);
-	free_file_block(&(guich->file));
-	 
+
+	free_mat(guich); //liberation de la matrice dynamique
+	free_file_block(&(guich->file)); //liberation de la file
+
 	return 1;
 }
 
@@ -225,16 +215,16 @@ int free_guichet(t_guichet * guich) {
 Description : Informe si le guichet a un espace vide
 PARAMETRES : l'adresse du guichet evalue
 RETOUR : retourne '1' si il y a de l'espace dans le guichet, '0' sinon
-SPECIFICATIONS : Le guichet doit être initialise
+SPECIFICATIONS : Le guichet doit Ãªtre initialise
 */
 int guichet_case_vide(t_guichet* guich) {
-	int i = 0;
+	int i = 0; //commpteur
 	while (guich->file.tab_block[i].taille_bloc != 0 && i < guich->file.taille) {
-		i++;
+		i++; //on regarde s'il y a un espace vide dans la file
 	}
-	if (i>= guich->file.taille){
-		return 0;
-	}
-	else { return 1; }
+	if (i >= guich->file.taille)
+		return 0; //on a pas trouve un espace vide
+	else 
+		return 1; //on a trouve un espace vide
 }
 /*************************************************************************************************/
