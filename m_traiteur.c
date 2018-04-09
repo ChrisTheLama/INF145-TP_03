@@ -100,7 +100,7 @@ void entree_bloc(t_traiteur * traiteur, t_block bloc, int taille) {
 		if (ptr_lg == NULL) {
 			traiteur->fin_lguichet = ajouter_g_fin(traiteur->fin_lguichet, taille); //ajouter un 
 			//on s'assure que la fin reste a jour								   //nouveau noeud
-			traiteur->nbr_guichet++;
+			traiteur->nbr_guichet++; //on incremente le compteur de guichet
 			ptr_lg = traiteur->fin_lguichet; //aller chercher l'adresse du dernier noeud
 		}
 
