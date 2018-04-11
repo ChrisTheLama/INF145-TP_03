@@ -3,13 +3,12 @@
 
 /*************************************************************************************************/
 /*
-Le module de guichet fournit le type t_guichet et des fonctions en liens avec ce type.
----------------------------->>  A MODIFIER     <<--------------------------------------------------
-Le module offre l'initialisation, l'empilement et le depilement de blocs dans une pile accessible
-par le t_regroupement. De plus, il est possible d'analyser le contenu du nouveau type par les
-fonctions : pile_blocs_nombre, pile_blocs_pleine, pile_blocs_taille et pile_blocs_vide.
-Finalement, il est necessaire de libere la memoire de la pile du t_regroupement grace a
-free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
+Le module m_complementaire.h offre l'initialisation et l'appel de la fonction rand(), les tests 
+pour evaluer la quantite de memoire est decouper dans des fichiers ou la quantite de bloc non-vide 
+dans un t_traiteur disponible dans le module m_traiteur. Il est possible d'analyser des valeurs 
+talons dans un traiteur
+fonctions : init_rand(), rand_s(), taille_restante_tot(), block_restante_tot(), statistique()
+Il est necessaire de faire l'appel de init_rand avant l'utilisation de rand_s
 */
 
 /**************************************************************************************************/
