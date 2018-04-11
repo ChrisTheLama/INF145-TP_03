@@ -3,129 +3,96 @@
 
 /*************************************************************************************************/
 /*
-Le module de guichet fournit le type t_guichet et des fonctions en liens avec ce type.
----------------------------->>  A MODIFIER     <<--------------------------------------------------
-Le module offre l'initialisation, l'empilement et le depilement de blocs dans une pile accessible
-par le t_regroupement. De plus, il est possible d'analyser le contenu du nouveau type par les
-fonctions : pile_blocs_nombre, pile_blocs_pleine, pile_blocs_taille et pile_blocs_vide.
-Finalement, il est necessaire de libere la memoire de la pile du t_regroupement grace a
-free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
+Le module offre l'initialisation et l'appel de la fonction rand(), les tests pour evaluer la 
+la quantite de memoire est decouper dans des fichiers ou la quantite de bloc non-vide dans un 
+t_traiteur disponible dans le module m_traiteur. Il est possible d'analyser des valeurs talons 
+dans un traiteur
+fonctions : init_rand(), rand_s(), taille_restante_tot(), block_restante_tot(), statistique()
+Il est necessaire de faire l'appel de init_rand avant l'utilisation de rand_s
 */
 
 /**************************************************************************************************/
 
-#ifndef  __MODULE__TRAITEUR__
-#define  __MODULE__TRAITEUR__
+#ifndef  __MODULE__COMPLEMENTAIRE__
+#define  __MODULE__COMPLEMENTAIRE__
 
 /*************************************************************************************************/
 //qui permet de désactiver certains warnings du compilateur
-#define _CRT_SECURE_NO_WARNINGS  
+#define _CRT_SECURE_NO_WARNINGS
+
 // Librairies usuelles à inclure
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<time.h>
-#include"m_decoupage.h"
-#include"m_file.h"
-#include"m_file_chainee.h"
-#include"m_guichet.h"
-#include"m_liste_guichet.h"
+#include<limits.h>
+
+#include"m_reconstruction.h"
+#include"m_traiteur.h"
 /*************************************************************************************************/
 
 /*===================================== LES CONSTANTES ==========================================*/
-
+#define NBR_INIT			2			//Nombre de repetition pour l'initialisation
+#define AFFICH_T_REC		1			//0->N'affiche pas le contenu des t_rec : Autre->OUI
+#define REPET_AFFICH		100			//Recurence de l'affichage dans proc_decoup()||0->Aucun
+#define PREF_NOM_COPIE		"copie_"	//prefixe du nom des copies du fichier 
 /*===============================================================================================*/
 
 /*************************************************************************************************/
 /*************************************************************************************************/
 
-typedef struct {
-
-	t_liste_g* liste_guichet; //Liste chainee double de Guichet
-	t_liste_g* fin_lguichet; //pointeur de la fin de la liste
-	t_file_block_chainee file_garde; //Liste double (en file) 
-	int nbr_guichet;
-	int nbr_block;
-
-} t_traiteur;
-
-
-/***************************************** NOM FONCTION ******************************************/
+/****************************************** INIT_RAND ********************************************/
 /*
-donne
-PARAMETRES :
-RETOUR :
-SPECIFICATIONS :
+DESCRIPTION : Initialise la fonction rand()
+PARAMETRES : RIEN
+RETOUR : RIEN
+SPECIFICATIONS : AUCUNE
 */
+void init_rand(void);
 /*************************************************************************************************/
 
-/***************************************** INIT_TRAITEUR *****************************************/
-/* CONSTRUCTEUR
-Description : Construit un traiteur dont la liste et la file sont initialement vides
-PARAMETRES : taille de la file du guichet
-RETOUR : Un t_traiteur initialise
-SPECIFICATIONS : Aucune
+/******************************************** RAND_S *********************************************/
+/*
+DESCRIPTION : Retourne une valeur aleatoire entre minimum et un maximum
+PARAMETRES : minimum que la valeur peut avoir (inclusivement)
+			 maximum que la valeur peut avoir (exclusivement)
+RETOUR : La valeur aleatoire entre les bornes
+SPECIFICATIONS : Necessite l'appel de init_rand() avant l'appel de la fonction
 */
-t_traiteur init_traiteur(int taille);
+int rand_s(int min, int max);
 /*************************************************************************************************/
 
-/**************************************** GET_NB_GUICHET *****************************************/
-/* INFORMATRICE
-Description : Retourne le nombre de guichets actuellement dans la liste du traiteur
-PARAMETRES : l'adresse du traiteur evalue
-RETOUR : le nombre de guichet dans le traiteur
-SPECIFICATIONS : Le traiteur doit être initialise
-*/
-int get_nb_guichet(t_traiteur * traiteur);
-/**************************************************************************************************/
+/*=================================================================================================
+TITRE :Taille_restante_tot
+codee par Christophe Lamarche
+description : retourne la quantite totale de la memoire a decouper pour tous les fichiers
+In : Le tableau des identifiants des fichiers
+Out : la taille restant a decouper
+====================================================================*/
+int taille_restante_tot(unsigned int* id, int nb_fichier);
 
-/************************************ GET_NB_BLOC_TRAITEUR ****************************************/
-/* INFORMATRICE
-Description : Retourne le nombre total de t_block non-vides dans ses guichets plus ceux présents
-dans sa file de
-PARAMETRES : L'adresse du t_traiteur
-RETOUR : le nombre de t_bloc non-vides
-SPECIFICATIONS : La file doit être initialisee
+/*==================================== BLOCK_RESTANTE_TOT =======================================*/
+/*
+Titre : Taille_restante_tot
+description : retourne la quantite totale de la memoire a decouper pour tous les fichiers
+In : Le tableau des traiteurs
+	 la quantite de traiteur utilisee
+Out : la taille de bloc dans les traiteurs
 */
-int get_nb_bloc_traiteur(t_traiteur * traiteur);
-/*************************************************************************************************/
+/*===============================================================================================*/
+int block_restante_tot(t_traiteur * traiteur, int qte_traiteur);
 
-/****************************************** ENTREE_BLOC ******************************************/
-/* MUTATRICE
-Description : Cette fonction va :
-· déclencher donner_block_termine pour chacun des guichets du traiteur pour mettre dans
-sa file de garde tous les blocs non-vides traités qui ont été obtenus.
-· si le bloc reçu en paramètre est non-vide,
-o sélectionner un guichet qui acceptera d’enfiler le bloc (vous avez la responsabilité de la
-stratégie de choix).
-o si la précédente est impossible à réaliser et toutes les files sont pleines, créer et ajouter
-un guichet à la liste du traiteur et mettez-y le bloc.
-PARAMETRES : L'adresse du traiteur
-le bloc a integre
-RETOUR : Rien
-SPECIFICATIONS : Le traiteur doit etre initialise
+/*======================================= STATISTIQUE ===========================================*/
+/*
+Titre : statistique
+description : fait la compilation et l'affichage des statiques des traiteurs
+In :	Le tableau des traiteurs
+		nombre de traiteur
+		valeur volonte d'affichage (0 -> Aucun affichage ; 1 -> Affichage)
+Out : l'unite de temps
+CONDITION : Pour liberer l'espace memoire allouee pour la fonction il faut activer l'affichage 
 */
-void entree_bloc(t_traiteur * traiteur, t_block bloc, int taille);
-/*************************************************************************************************/
+/*===============================================================================================*/
+int statistique(t_traiteur * traiteur, int nb_traiteur, int affichage);
 
-/*************************************** SORTIE_BLOCK ********************************************/
-/* MUTATRICE
-Description : Si la file de garde du traiteur n’est pas vide, la fonction retourne le bloc non-vide
-qu’elle en extrait du début de la file. Sinon retour d’un bloc vide.
-PARAMETRES : adresse du traiteur
-RETOUR : un t_bloc
-SPECIFICATIONS : le traiteur doit être initialise
-*/
-t_block sortie_block(t_traiteur * traiteur);
-/*************************************************************************************************/
-
-/***************************************** FREE_TRAITEUR *****************************************/
-/* MUTATRICE
-Description : Libere l'espace memoire du traiteur
-PARAMETRES : l'adresse du t_traiteur
-RETOUR : "1" si les liberations se sont faits et "0" sinon
-SPECIFICATIONS : L traiteur doivent être initialise
-*/
-int free_traiteur(t_traiteur * traiteur);
-/*************************************************************************************************/
 #endif
