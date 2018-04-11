@@ -4,7 +4,6 @@
 /*************************************************************************************************/
 /*
 Le module de guichet fournit le type t_guichet et des fonctions en liens avec ce type.
----------------------------->>  A MODIFIER     <<--------------------------------------------------
 Le module offre l'initialisation, l'empilement et le depilement de blocs dans une pile accessible
 par le t_regroupement. De plus, il est possible d'analyser le contenu du nouveau type par les
 fonctions : pile_blocs_nombre, pile_blocs_pleine, pile_blocs_taille et pile_blocs_vide.
