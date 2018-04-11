@@ -65,7 +65,7 @@ int refaire_fich(t_reconstruction *rec, t_regroupement *reg, char *nouveau_nom, 
 void print_guichets(t_liste_g* guich);
 
 /*fonction qui imprime les propriétés d'un guichet*/
-void print_guichet(t_liste_g* guich);
+void print_guichet(t_guichet* guich);
 
 
 /*===============================================================================================*/
@@ -96,8 +96,6 @@ int main(void) {
 	//init m_random
 	init_rand();
 
-//	for (i = 0; i < 100; i++)
-//		printf("%d\t", rand_s(0, 10));
 
 	//boucle pour initialiser la mémoire pour chaque fichier
 	for (i = 0; i < NB_FICHIERS; i++) {
@@ -167,7 +165,7 @@ int main(void) {
 			}
 		}
 
-	} while (taille_restante_tot(id_fichier) != 0 || block_restante_tot(traiteur, NB_TRAITEUR) != 0);
+	} while (taille_restante_tot(id_fichier, NB_FICHIERS) != 0 || block_restante_tot(traiteur, NB_TRAITEUR) != 0);
 
 	temps = statistique(traiteur, NB_TRAITEUR, ON);
 
@@ -189,113 +187,6 @@ int main(void) {
 }
 #endif
 /*************************************************************************************************/
-
-/*===============================================================================================*/
-/*												TEST											 */
-/*===============================================================================================*/
-
-/*************************************************************************************************/
-//test de la file
-#if(0)
-int main(void) {
-
-	t_block bloc = { 0 };
-	t_block bloc_recept = { 0 };
-	int id = 0;
-	t_file_block blocs = { 0 };
-
-
-	//init file
-	blocs = init_file_block(TAILLE_FILE);
-
-	//début du découpage
-	init_decoupage();
-
-	//ajouter fichier
-	id = ajouter_fichier(NOM_FICHIER_0);
-
-	do {
-
-		//recevoir un bloc
-		bloc = get_bloc();
-
-		//mettre le bloc dans la file
-		enfiler_block(&blocs, bloc);
-
-	} while (bloc.bloc_final != 1);
-
-	//fermer le fichier
-	retirer_fichier(id);
-
-	do {
-
-		//aller chercher un bloc dans la file
-		defiler_block(&blocs, &bloc_recept);
-
-		//afficher si multiple de 2
-		if (bloc_recept.num_bloc % 2 == 0) {
-
-			print_bloc(&bloc_recept);
-		}
-
-	} while (bloc_recept.bloc_final != 1);
-
-	//libérer la file
-	free_file_block(&blocs);
-
-	system("pause");
-	return EXIT_SUCCESS;
-}
-#endif
-
-/*************************************************************************************************/
-//test de la file chainée de t_block
-#if(0)
-int main(void) {
-
-
-	t_block bloc = { 0 };
-	t_block bloc_recept = { 0 };
-	int id = 0;
-	t_file_block_chainee blocs = { 0 };
-
-	//début du découpage
-	init_decoupage();
-
-	//ajouter fichier
-	id = ajouter_fichier(NOM_FICHIER_0);
-
-	do {
-
-		//recevoir un bloc
-		bloc = get_bloc();
-
-		//mettre le bloc dans la file
-		enfiler_block_chainee(&blocs, bloc);
-
-	} while (bloc.bloc_final != 1);
-
-	//fermer le fichier
-	retirer_fichier(id);
-
-	do {
-
-		//aller chercher un bloc dans la file
-		defiler_block_chainee(&blocs, &bloc_recept);
-
-		//afficher si multiple de 2
-		if (bloc_recept.num_bloc % 2 == 0) {
-
-			print_bloc(&bloc_recept);
-		}
-
-	} while (bloc_recept.bloc_final != 1);
-
-
-	system("pause");
-	return EXIT_SUCCESS;
-}
-#endif
 
 
 
