@@ -3,13 +3,16 @@
 
 /*************************************************************************************************/
 /*
-Le module de guichet fournit le type t_guichet et des fonctions en liens avec ce type.
----------------------------->>  A MODIFIER     <<--------------------------------------------------
-Le module offre l'initialisation, l'empilement et le depilement de blocs dans une pile accessible
-par le t_regroupement. De plus, il est possible d'analyser le contenu du nouveau type par les
-fonctions : pile_blocs_nombre, pile_blocs_pleine, pile_blocs_taille et pile_blocs_vide.
-Finalement, il est necessaire de libere la memoire de la pile du t_regroupement grace a
-free_pile_blocs a la fin d'un programme si on utilise un t_regroupement.
+Le module de m_liste_guichet fournit le type t_liste_g et des fonctions en liens avec ce type.
+Le module offre l'initialisation, l'analyse de la quantite de guichet dans la liste, aller 
+chercher le pointeur de debut ou de fin , ajouter un guichet a la fin de la liste , enlever un 
+guichet a la fin, libere la memoire d'un noeud de la liste, libere la liste, chercher les donnees
+dans un noeud et chercher un guichet ayant de l'espace libre.
+fonctions : init_liste_g(), get_nb_guichet(), chercher_g_fin(), chercher_g_debut(), ajouter_g_fin()
+			enlever_g_debut(), free_noeud_lg(), free_liste_lg(), chercher_data_g(), 
+			chercher_g_vide()
+Finalement, il est necessaire de libere la memoire de la pile du t_liste grace a la fonction
+free_liste_lg a la fin d'un programme si on utilise un t_liste_g.
 */
 
 /**************************************************************************************************/
